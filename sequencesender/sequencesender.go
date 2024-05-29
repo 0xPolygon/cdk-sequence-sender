@@ -834,6 +834,9 @@ func (s *SequenceSender) addNewBatchL2Block(l2BlockStart state.DSL2BlockStart) {
 		// Add L2 block
 		wipBatchRaw.Blocks = append(wipBatchRaw.Blocks, newBlockRaw)
 
+		// Update batch timestamp
+		data.batch.LastL2BLockTimestamp = l2BlockStart.Timestamp
+
 		// Get current L2 block
 		_, blockRaw := s.getWipL2Block()
 		if blockRaw == nil {
