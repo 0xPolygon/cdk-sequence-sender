@@ -89,62 +89,51 @@ func NewClient(cfg Config, l1Config L1Config) (*Client, error) {
 	}
 	log.Debug("rollupID: ", rollupID)
 
-	dapAddr, err := zkevm.DataAvailabilityProtocol(&bind.CallOpts{Pending: false})
-	if err != nil {
-		return nil, err
-	}
-	dap, err := dataavailabilityprotocol.NewDataavailabilityprotocol(dapAddr, ethClient)
-	if err != nil {
-		return nil, err
-	}
-
-	return &Client{
+	client := Client{
 		EthClient:     ethClient,
 		ZkEVM:         zkevm,
 		RollupManager: rollupManager,
-		DAProtocol:    dap,
 		RollupID:      rollupID,
 		l1Cfg:         l1Config,
 		cfg:           cfg,
 		auth:          map[common.Address]bind.TransactOpts{},
-	}, nil
+	}
+
+	if cfg.IsValidiumMode {
+		dapAddr, err := zkevm.DataAvailabilityProtocol(&bind.CallOpts{Pending: false})
+		if err != nil {
+			return nil, err
+		}
+
+		client.DAProtocol, err = dataavailabilityprotocol.NewDataavailabilityprotocol(dapAddr, ethClient)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return &client, nil
 }
 
-// EstimateGasSequenceBatches estimates gas for sending batches
-func (etherMan *Client) EstimateGasSequenceBatches(sender common.Address, sequences []ethmanTypes.Sequence, maxSequenceTimestamp uint64, initSequenceBatchNumber uint64, l2Coinbase common.Address, dataAvailabilityMessage []byte) (*types.Transaction, error) {
+// BuildSequenceBatchesTx builds a tx to be sent to the PoE SC method SequenceBatches.
+func (etherMan *Client) BuildSequenceBatchesTx(sender common.Address, sequences []ethmanTypes.Sequence, maxSequenceTimestamp uint64, lastSequencedBatchNumber uint64, l2Coinbase common.Address, dataAvailabilityMessage []byte) (*types.Transaction, error) {
 	opts, err := etherMan.getAuthByAddress(sender)
 	if err == ErrNotFound {
-		return nil, ErrPrivateKeyNotFound
+		return nil, fmt.Errorf("failed to build sequence batches, err: %w", ErrPrivateKeyNotFound)
 	}
+
 	opts.NoSend = true
 
-	// Cost using calldata
-	tx, err := etherMan.sequenceBatches(opts, sequences, maxSequenceTimestamp, initSequenceBatchNumber, l2Coinbase, dataAvailabilityMessage)
-	if err != nil {
-		return nil, err
-	}
-	return tx, nil
-}
-
-// BuildSequenceBatchesTxData builds a []bytes to be sent to the PoE SC method SequenceBatches.
-func (etherMan *Client) BuildSequenceBatchesTxData(sender common.Address, sequences []ethmanTypes.Sequence, maxSequenceTimestamp uint64, lastSequencedBatchNumber uint64, l2Coinbase common.Address, dataAvailabilityMessage []byte) (to *common.Address, data []byte, err error) {
-	opts, err := etherMan.getAuthByAddress(sender)
-	if err == ErrNotFound {
-		return nil, nil, fmt.Errorf("failed to build sequence batches, err: %w", ErrPrivateKeyNotFound)
-	}
-	opts.NoSend = true
 	// force nonce, gas limit and gas price to avoid querying it from the chain
 	opts.Nonce = big.NewInt(1)
 	opts.GasLimit = uint64(1)
 	opts.GasPrice = big.NewInt(1)
 
-	var tx *types.Transaction
-	tx, err = etherMan.sequenceBatches(opts, sequences, maxSequenceTimestamp, lastSequencedBatchNumber, l2Coinbase, dataAvailabilityMessage)
+	tx, err := etherMan.sequenceBatches(opts, sequences, maxSequenceTimestamp, lastSequencedBatchNumber, l2Coinbase, dataAvailabilityMessage)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
-	return tx.To(), tx.Data(), nil
+	return tx, nil
 }
 
 // GetLatestBatchNumber function allows to retrieve the latest proposed batch in the smc
