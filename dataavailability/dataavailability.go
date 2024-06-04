@@ -9,17 +9,12 @@ import (
 // DataAvailability implements an abstract data availability integration
 type DataAvailability struct {
 	backend DABackender
-
-	ctx context.Context
 }
 
 // New creates a DataAvailability instance
-func New(
-	backend DABackender,
-) (*DataAvailability, error) {
+func New(backend DABackender) (*DataAvailability, error) {
 	da := &DataAvailability{
 		backend: backend,
-		ctx:     context.Background(),
 	}
 	err := da.backend.Init()
 	return da, err
