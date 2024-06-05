@@ -174,7 +174,7 @@ func (s *SequenceSender) Start(ctx context.Context) {
 	// Start receiving the streaming
 	err = s.streamClient.ExecCommandStartBookmark(bookmark)
 	if err != nil {
-		log.Fatalf("[SeqSender] failed to connect to the streaming")
+		log.Fatalf("[SeqSender] failed to connect to the streaming: %v", err)
 	}
 }
 
