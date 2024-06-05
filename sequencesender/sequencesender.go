@@ -13,11 +13,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/0xPolygonHermez/zkevm-sequence-sender/etherman"
-
 	"github.com/0xPolygonHermez/zkevm-data-streamer/datastreamer"
 	"github.com/0xPolygonHermez/zkevm-ethtx-manager/ethtxmanager"
 	ethtxlog "github.com/0xPolygonHermez/zkevm-ethtx-manager/log"
+	"github.com/0xPolygonHermez/zkevm-sequence-sender/etherman"
 	"github.com/0xPolygonHermez/zkevm-sequence-sender/etherman/types"
 	"github.com/0xPolygonHermez/zkevm-sequence-sender/log"
 	"github.com/0xPolygonHermez/zkevm-sequence-sender/state"
