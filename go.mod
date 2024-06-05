@@ -4,7 +4,7 @@ go 1.21
 
 require (
 	github.com/0xPolygon/cdk-data-availability v0.0.7
-	github.com/0xPolygonHermez/zkevm-data-streamer v0.2.0
+	github.com/0xPolygonHermez/zkevm-data-streamer v0.2.2
 	github.com/0xPolygonHermez/zkevm-ethtx-manager v0.0.11
 	github.com/0xPolygonHermez/zkevm-node v0.5.0
 	github.com/ethereum/go-ethereum v1.13.15
