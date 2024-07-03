@@ -1,0 +1,8 @@
+#!/bin/bash
+#
+###############
+# Remove cdk-sequencer-sender installs
+##############
+sudo rm -rf /lib/systemd/system/cdk-sequencer-sender.service
+sudo deluser cdk-sequencer-sender
+sudo systemctl daemon-reload
