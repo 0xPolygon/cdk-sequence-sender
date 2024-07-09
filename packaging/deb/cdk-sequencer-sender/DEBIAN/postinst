@@ -1,0 +1,12 @@
+#!/bin/bash
+# This is a postinstallation script so the service can be configured and started when requested
+#
+sudo adduser --disabled-password --disabled-login --shell /usr/sbin/nologin --quiet --system --no-create-home --home /nonexistent cdk-sequencer-sender
+if [ -d "/opt/cdk-sequencer-sender" ]
+then
+    echo "Directory /opt/cdk-sequencer-sender exists."
+else
+    sudo mkdir -p /opt/cdk-sequencer-sender
+    sudo chown -R cdk-sequencer-sender /opt/cdk-sequencer-sender
+fi
+sudo systemctl daemon-reload
