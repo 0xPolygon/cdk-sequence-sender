@@ -99,3 +99,7 @@ Another example setting a network customization file:
 ```bash
 dist/zkevm-seqsender run --network custom --custom-network-file ./test/config/mynet.genesis.config.json --cfg ./test/config/mynet.config.toml --components sequence-sender
 ```
+
+## Contact
+
+For more discussions, please head to the [R&D Discord](https://discord.gg/0xPolygonRnD)
