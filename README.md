@@ -1,3 +1,19 @@
+> [!WARNING]
+> **This repository is deprecated and no longer maintained.**
+>
+> The legacy CDK node stack (CDK node, validium node, sequence sender, data availability committee) has been retired. Polygon CDK chains now run on
+> [cdk-op-reth](https://github.com/0xPolygon/cdk-op-reth) and settle to the
+> [Agglayer](https://github.com/agglayer/agglayer) with pessimistic proofs and
+> full execution proofs. This code is kept for reference only. It will not
+> receive bug fixes, security patches, or releases.
+>
+> **Use instead:**
+> - Connecting a chain to the Agglayer: [agglayer/aggkit](https://github.com/agglayer/aggkit)
+> - Execution client / node: [0xPolygon/cdk-op-reth](https://github.com/0xPolygon/cdk-op-reth)
+> - Docs: [docs.polygon.technology](https://docs.polygon.technology)
+>
+> Security issues in live Polygon systems: see [SECURITY.md](https://github.com/0xPolygon/.github/blob/main/SECURITY.md).
+
 # zkevm-sequence-sender
 Stateless autonomous binary to sequence L2 batches and send them to L1.
 
